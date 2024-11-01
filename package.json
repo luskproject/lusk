@@ -42,7 +42,7 @@
             "web": "https://github.com/N1kO23"
         }
     ],
-    "license": "GPL-3.0",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/luskproject/lusk/issues"
     },
