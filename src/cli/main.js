@@ -40,7 +40,6 @@ const flags = new Flags( [
     { argument: 'solution-path', value: null,    description: 'Solution path to enforce project cautions' },
     { flag:     'd',             value: false,   description: 'Run in Debug mode' },
     { flag:     'f',             value: false,   description: 'Enable force mode' },
-    { flag:     'g',             value: false,   description: 'Use Global Scope (for conf and install)' },
     { flag:     's',             value: false,   description: 'Force quiet/silent mode' },
 ] );
 
