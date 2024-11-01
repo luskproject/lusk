@@ -1,0 +1,54 @@
+{
+    "name": "@luskproject/lusk",
+    "version": null,
+    "description": "Lusk is a modular, plugin-based project manager.",
+    "main": "src/core/luskDocument.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "lusk": "src/cli/main.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/luskproject/lusk.git"
+    },
+    "keywords": [
+        "lusk",
+        "project",
+        "manager",
+        "project-manager",
+        "javascript"
+    ],
+    "maintainers": [
+        {
+            "name": "Botaro Shinomiya",
+            "email": "nothing@citri.one",
+            "web": "https://github.com/citrizon"
+        },
+        {
+            "name": "OSCILLIX",
+            "email": "oscillixonline@gmail.com",
+            "web": "https://github.com/Oscillix"
+        },
+        {
+            "name": "Bluskript",
+            "email": "bluskript@gmail.com",
+            "web": "https://github.com/bluskript"
+        },
+        {
+            "name": "N1kO23",
+            "email": "niko.huuskonen.00@gmail.com",
+            "web": "https://github.com/N1kO23"
+        }
+    ],
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/luskproject/lusk/issues"
+    },
+    "homepage": "https://github.com/luskproject/lusk#readme",
+    "type": "module",
+    "dependencies": {
+        "yaml": "^2.6.0"
+    }
+}

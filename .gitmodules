@@ -1,0 +1,3 @@
+[submodule "transits/lusk-builtins"]
+	path = transits/lusk-builtins
+	url = https://github.com/luskproject/lusk-builtins
