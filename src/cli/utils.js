@@ -243,6 +243,12 @@ class IntakeManager {
                 outp.write( this.padding + this.output + ConsoleManager.cursorBackward( this.indexOffset ) );
             }
         }
+        else if (
+            [
+                'up',
+                'down'
+            ].includes( key.name )
+        ) return;
         else {
             this.output = insert( this.output, this.output.length - this.indexOffset, key.sequence );
             outp.write( ConsoleManager.renderClean( 1 ) );
