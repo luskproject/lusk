@@ -1,5 +1,5 @@
 {
-    "name": "@luskproject/lusk",
+    "name": "lusk",
     "version": null,
     "description": "Lusk is a modular, plugin-based project manager.",
     "main": "src/core/luskDocument.js",
