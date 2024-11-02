@@ -45,6 +45,7 @@ const flags = new Flags( [
 
 SharedContext.cwd = flags.arguments.cwd;
 SharedContext.homedir = flags.arguments.homedir;
+SharedContext.solutionPath = flags.arguments[ 'solution-path' ];
 SharedContext.debug = flags.flags.d;
 SharedContext.silent = flags.flags.s;
 
@@ -161,7 +162,10 @@ if ( !command ) {
 
 // We can now import rest of the stuff
 import { LuskTransit } from "../manager/transitContext.js";
-import LuskManager from "../manager/transitManager.js";
+
+// We need this for setting up some stuff.
+// Check that file for more info.
+import "../manager/transitManager.js";
 
 // We can now import transits that are inside this
 // project folder. This is the only dynamic import

@@ -51,6 +51,6 @@ export default {
         return presetFile.run( preset, {
             sharedContext,
             presetFile
-        }, sharedContext.cwd, sharedContext.homedir, sharedContext.debug );
+        }, sharedContext.cwd, sharedContext.homedir, sharedContext.solutionPath, sharedContext.debug );
     }
 }
