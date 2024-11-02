@@ -64,7 +64,7 @@ export default {
             const solPath = sharedContext.solutionPath;
             try {
                 solution = yaml_parse( readFileSync( solPath, { encoding: 'utf-8' } ) );
-                if ( !solution.included )
+                if ( !solution?.included )
                     throw new Error( 'Solution file is invalid. (It does not contain the key "included")' );
                 solution.included = solution.included.map( file => isAbsolute( file ) ? file : join( solPath, '../', file ) );
             } catch ( e ) {
