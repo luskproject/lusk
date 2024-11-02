@@ -165,7 +165,11 @@ import { LuskTransit } from "../manager/transitContext.js";
 
 // We need this for setting up some stuff.
 // Check that file for more info.
-import "../manager/transitManager.js";
+import { TransitManager } from "../manager/transitManager.js";
+
+// We can now finally decide on the solutionPath
+SharedContext.solutionPath = SharedContext.solutionPath ||
+                                TransitManager.ProjectStore.solutionPath;
 
 // We can now import transits that are inside this
 // project folder. This is the only dynamic import

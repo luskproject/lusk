@@ -31,6 +31,9 @@ export default {
         ].includes( preset ) )
             throw new Error( 'You cannot perform "make" on reserved keywords/keys.' );
 
+        // Check if we are in force mode
+        const force = this.flags.flags.f;
+
         // Now let's find out if the file exists
         if ( !existsSync( TransitManager.ProjectStore.configPath ) )
             throw new Error( 'There is nothing to do since there is no preset file here, dummy!' );
@@ -46,11 +49,34 @@ export default {
             throw e;
         }
 
+        // Let's check if the solutionFile exists...
+        let solution = null;
+        const solExists = existsSync( sharedContext.solutionPath );
+        if ( !solExists && this.flags.arguments[ 'solution-path' ] )
+            throw new Error( 'Given solution path does not exists.' );
+        else if ( solExists ) {
+            // We want the solution file to be
+            // as flexible as possible for IDE's
+            // to add their own necessary stuff.
+            // Only thing we need is just "includes"
+            // array that consist of files.
+            try {
+                solution = yaml_parse( readFileSync( sharedContext.solutionPath, { encoding: 'utf-8' } ) );
+                if ( !solution.included )
+                    throw new Error( 'Solution file is invalid. (It does not contain the key "included")' );
+            } catch ( e ) {
+                if ( force )
+                    this.con.warn( 'Solution data is invalid. Ignoring since we are in force mode.' );
+                else throw e;
+            }
+        }
+
         // Now we can use the preset... hopefully...
         this.con.log( `Make Preset: ${ this.colors.fg.gray( preset ) }` );
         return presetFile.run( preset, {
             sharedContext,
-            presetFile
-        }, sharedContext.cwd, sharedContext.homedir, sharedContext.solutionPath, sharedContext.debug );
+            presetFile,
+            force
+        }, sharedContext.cwd, sharedContext.homedir, solution, sharedContext.debug );
     }
 }
