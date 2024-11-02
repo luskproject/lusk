@@ -39,7 +39,7 @@ export default class ConPlus {
         this.base = function ( method, color, ...args ) {
             if ( !silent || method === 'error' ) {
                 const logRef = ( typeof method === 'function' ? method : console[ method ] );
-                if ( SCtx.debug || method === 'error' || method === 'warn' )
+                if ( SCtx.debug )
                     logRef( colors.fg[ color ?? 'reset' ]( ( ident ?? Decors.start ) + `(${ CallSite.current( 2 ).text })` ), ...args )
                 else logRef( colors.fg[ color ?? 'reset' ]( ( ident ?? ( typeof method === 'function' ? '  ' : Decors.start ) ) ), ...args )
             }
