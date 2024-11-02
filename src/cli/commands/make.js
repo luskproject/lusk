@@ -15,6 +15,7 @@
 import { parse as yaml_parse } from 'yaml';
 import { TransitManager } from "../../manager/transitManager.js";
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { isAbsolute, join } from 'node:path';
 import LuskDocument from '../../core/luskDocument.js';
 import sharedContext from '../../manager/sharedContext.js';
 
@@ -60,10 +61,12 @@ export default {
             // to add their own necessary stuff.
             // Only thing we need is just "includes"
             // array that consist of files.
+            const solPath = sharedContext.solutionPath;
             try {
-                solution = yaml_parse( readFileSync( sharedContext.solutionPath, { encoding: 'utf-8' } ) );
+                solution = yaml_parse( readFileSync( solPath, { encoding: 'utf-8' } ) );
                 if ( !solution.included )
                     throw new Error( 'Solution file is invalid. (It does not contain the key "included")' );
+                solution.included = solution.included.map( file => isAbsolute( file ) ? file : join( solPath, '../', file ) );
             } catch ( e ) {
                 if ( force )
                     this.con.warn( 'Solution data is invalid. Ignoring since we are in force mode.' );
