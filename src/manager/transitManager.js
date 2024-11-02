@@ -43,7 +43,7 @@ export class TransitManager {
         dirPath: join( cwd, '.lusk/' ),
         transitsDirPath: join( cwd, '.lusk/transit_data/' ),
         configPath: join( cwd, 'lusk.yaml' ),
-        solutionPath: join( cwd, 'solution.lusk.yaml' )
+        solutionPath: join( cwd, 'lusk.solution.yaml' )
     }
 
     static ensureUserStore () {
