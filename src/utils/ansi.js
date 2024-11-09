@@ -162,7 +162,7 @@ export function supportedMaxLevel ( isTTY = false ) {
 
 export const maxSupported = supportedMaxLevel( tty.isatty( 1 ) && tty.isatty( 2 ) );
 
-export const color = ( ( bg = false ) => {
+export const coloring = ( ( bg = false ) => {
     const c16  = ColorAdapter.ColorToANSI16.bind( ColorAdapter, bg ),
           c256 = ColorAdapter.ColorToANSI256.bind( ColorAdapter, bg ),
           c32m = ColorAdapter.ColorToANSITrueColor.bind( ColorAdapter, bg );
@@ -173,20 +173,23 @@ export const color = ( ( bg = false ) => {
     if ( maxSupported == COLOR_LEVEL.TRUECOLOR )
         return colour => ( typeof colour === 'string' ) ? c32m( Color.fromHEX( colour ) ) : c32m( colour );
     return _ => '';
-} )();
+} );
+
+export const color = coloring( false );
+export const bgColor = coloring( true );
 
 export const colors = {
     bg: {
-        white:   WrapString.bind( null, color( '#FFFFFF', true ) ),
-        black:   WrapString.bind( null, color( '#000000', true ) ),
-        gray:    WrapString.bind( null, color( '#404040', true ) ),
-        green:   WrapString.bind( null, color( '#33FF55', true ) ),
-        yellow:  WrapString.bind( null, color( '#FFBB00', true ) ),
-        cyan:    WrapString.bind( null, color( '#00FFCC', true ) ),
-        magenta: WrapString.bind( null, color( '#FF20EE', true ) ),
-        purple:  WrapString.bind( null, color( '#A020F0', true ) ),
-        red:     WrapString.bind( null, color( '#FF4040', true ) ),
-        blue:    WrapString.bind( null, color( '#4090FF', true ) ),
+        white:   WrapString.bind( null, bgColor( '#FFFFFF' ) ),
+        black:   WrapString.bind( null, bgColor( '#000000' ) ),
+        gray:    WrapString.bind( null, bgColor( '#404040' ) ),
+        green:   WrapString.bind( null, bgColor( '#33FF55' ) ),
+        yellow:  WrapString.bind( null, bgColor( '#FFBB00' ) ),
+        cyan:    WrapString.bind( null, bgColor( '#00FFCC' ) ),
+        magenta: WrapString.bind( null, bgColor( '#FF20EE' ) ),
+        purple:  WrapString.bind( null, bgColor( '#A020F0' ) ),
+        red:     WrapString.bind( null, bgColor( '#FF4040' ) ),
+        blue:    WrapString.bind( null, bgColor( '#4090FF' ) ),
         reset:   WrapString.bind( null, '\x1b[0m'          )
     },
     fg: {
