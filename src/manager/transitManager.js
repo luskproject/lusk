@@ -93,5 +93,3 @@ export class TransitManager {
         this.config = TransitManager.getConfig();
     }
 }
-
-export default new TransitManager();

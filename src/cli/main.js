@@ -180,8 +180,11 @@ const { resolve } = createRequire( currentMetaUrl.href );
 readdirSync( join( currentMetaUrl.pathname, '../../../transits/' ), { withFileTypes: true } )
     .filter( e => e.isDirectory() )
     .map( e => resolve( join( e.parentPath, e.name ) ) )
-    .forEach( file => LuskTransit.runFile( file, { cwd, homedir, commands } ) )
+    .forEach( file => LuskTransit.runFile( file, { cwd, homedir, commands } ) );
 
+// After loading the built-in transits, let's do
+// something about the user configurated ones.
+new TransitManager();
 
 // Now that we made our help page too, we can
 // focus on running the commands
