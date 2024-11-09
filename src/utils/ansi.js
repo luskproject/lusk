@@ -128,6 +128,8 @@ export function supportedMaxLevel ( isTTY = false ) {
         return colorForce;
     if ( 'TF_BUILD' in env && 'AGENT_NAME' in env )
 		return COLOR_LEVEL.BASIC;
+    if ( 'ZED_ENVIRONMENT' in env && env?.ZED_TERM )
+        return COLOR_LEVEL.TRUECOLOR;
     if ( !isTTY || TERM == 'dumb' )
         return COLOR_LEVEL.NONE;
     if ( TERM == 'linux' )
