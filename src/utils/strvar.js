@@ -24,6 +24,7 @@ export default class VariableFormatter {
         return Object.fromEntries( Object.entries( Object.assign( {}, obj ) ).map(
             ( [ objKey, objValue  ] ) => {
                 if ( !objKey || !objValue ) return [ objKey, objValue ];
+                if ( objValue instanceof Array )    return [ objKey, objValue ];
                 if ( typeof objValue === 'object' ) return [ objKey, this.format( objValue ) ];
                 if ( typeof objValue !== 'string' ) return [ objKey, objValue ];
                 Object.entries( this.presets ).forEach( ( [ key, value ] ) => {
