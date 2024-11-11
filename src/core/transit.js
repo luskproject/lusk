@@ -112,6 +112,23 @@ export class TransitManager {
             throw new Errors.InvalidContextError( 'Given context is not an instance of TransitContext' );
         this[ PROTECTED ] = contextClass;
         this[ PROTECTED2 ] = {};
+
+        // Expose descriptor of "shared" property by
+        // initializing it in constructor
+        Object.defineProperty( this, 'shared', {
+            get () {
+                const vals = Object.values( this[ PROTECTED2 ] );
+                if ( vals.length < 2 )
+                    return vals[ 0 ] || new this[ PROTECTED ];
+                const sharedObject = new this[ PROTECTED ];
+                Object.values( vals ).forEach( transit => {
+                    return Object.entries( transit ).forEach( ( [ key, value ] ) => {
+                        value.getAll().forEach( val => sharedObject[ key ].add( val ) )
+                    } );
+                } );
+                return sharedObject;
+            }
+        } )
     }
     Transit ( transitInfo ) {
         if ( !transitInfo.id )
@@ -146,29 +163,23 @@ export class TransitManager {
     getAllTransitsAsObject () {
         return this[ PROTECTED2 ];
     }
-    get shared () {
-        const vals = Object.values( this[ PROTECTED2 ] );
-        if ( vals.length < 2 )
-            return vals[ 0 ] || new this[ PROTECTED ];
-
-        const sharedObject = new this[ PROTECTED ];
-        Object.values( vals ).forEach( transit => {
-            return Object.entries( transit ).forEach( ( [ key, value ] ) => {
-                value.getAll().forEach( val => sharedObject[ key ].add( val ) )
-            } );
-        } );
-        return sharedObject;
-    }
 }
 
 export class TransitUnit {
     constructor ( parcelClass ) {
         this.manager = new TransitManager( parcelClass );
         this.__reqHandle = createRequire( import.meta.url );
+
+        // We need to expose shared transits object to
+        // Transit function itself
+        this.transitFunction = this.manager.Transit.bind( this.manager );
+        Object.defineProperty( this.transitFunction, 'shared', {
+            get: Object.getOwnPropertyDescriptor( this.manager, 'shared' ).get.bind( this.manager )
+        } )
     }
     runFile ( fileUrl, globals ) {
         return ( new LocalModuleContext( fileUrl, {
-            Transit: this.manager.Transit.bind( this.manager ),
+            Transit: this.transitFunction,
             Terminal: ConPlus.instance,
             Errors: Errors.default,
             colors,
@@ -177,7 +188,7 @@ export class TransitUnit {
     }
     runRequire ( id, globals ) {
         return ( new LocalModuleContext( this.__reqHandle.resolve( id ), {
-            Transit: this.manager.Transit.bind( this.manager ),
+            Transit: this.transitFunction,
             Terminal: ConPlus.instance,
             Errors: Errors.default,
             colors,

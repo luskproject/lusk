@@ -34,6 +34,7 @@ export const InvalidParcelError = NCError( 'InvalidParcelError' );
 export const ParcelExistsError = NCError( 'ParcelExistsError' );
 export const ParcelNotExistsError = NCError( 'ParcelNotExistsError' );
 export const InvalidContextError = NCError( 'InvalidContextError' );
+export const TransitNotExistsError = NCError( 'TransitNotExistsError' );
 export const LuskDocumentError = NCError( 'LuskDocumentError' );
 export const PresetNotExistsError = NCError( 'PresetNotExistsError' );
 
