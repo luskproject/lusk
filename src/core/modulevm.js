@@ -18,12 +18,16 @@ import { readFileSync as rfs } from 'node:fs';
 import { createRequire } from 'node:module';
 
 export class LocalModuleContext {
-    constructor ( url, globals ) {
+    constructor ( url, globals, topCache = {} ) {
         // Prepare constants and output variables
         this.__moduleOutputCache = null;
         this.__scriptDir = pjoin( url, '../' );
         this.__scriptUrl = url;
         this.__globals = globals ?? {};
+
+        // To make thing faster, we need to create a cache
+        // for already required/imported scripts.
+        this.__moduleInnerCache = topCache;
     }
     run () {
         // If a cache exists, there is no need to run
@@ -41,9 +45,11 @@ export class LocalModuleContext {
         const reqHandle = createRequire( this.__scriptUrl );
         const reqFusion = id => {
             const mod = reqHandle.resolve( id );
+            if ( this.__moduleInnerCache[ mod ] )
+                return this.__moduleInnerCache[ mod ];
             if ( mod === id || !mod )
                 return reqHandle( id );
-            return ( new LocalModuleContext( mod, this.__globals ) ).run()
+            return this.__moduleInnerCache[ mod ] = ( new LocalModuleContext( mod, this.__globals, this.__moduleInnerCache ) ).run()
         };
         reqFusion.resolve = reqHandle.resolve;
         reqFusion.main = reqHandle.main;
@@ -96,13 +102,17 @@ export class LocalModuleContext {
 }
 
 export class TempModuleContext {
-    constructor ( evalcode, globals ) {
+    constructor ( evalcode, globals, topCache = {} ) {
         // Prepare constants and output variables
         this.__moduleOutputCache = null;
         this.__scriptDir = pjoin( __dirname, '../../' );
         this.__scriptUrl = 'Lusk:ModuleVMInvocationService';
         this.__scriptCode = evalcode;
         this.__globals = globals ?? {};
+
+        // To make thing faster, we need to create a cache
+        // for already required/imported scripts.
+        this.__moduleInnerCache = topCache;
     }
     run () {
         // If a cache exists, there is no need to run
@@ -120,9 +130,11 @@ export class TempModuleContext {
         const reqHandle = createRequire( this.__scriptUrl );
         const reqFusion = id => {
             const mod = reqHandle.resolve( id );
+            if ( this.__moduleInnerCache[ mod ] )
+                return this.__moduleInnerCache[ mod ];
             if ( mod === id || !mod )
                 return reqHandle( id );
-            return ( new LocalModuleContext( mod, this.__globals ) ).run()
+            return this.__moduleInnerCache[ mod ] = ( new LocalModuleContext( mod, this.__globals ) ).run()
         };
         reqFusion.resolve = reqHandle.resolve;
         reqFusion.main = reqHandle.main;
