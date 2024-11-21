@@ -21,10 +21,10 @@ class ObjectExtensions {
         for ( let i = 1; i < arguments.length; ++i ) {
             if ( source = arguments[ i ] ) {
                 Object.keys( source ).forEach( function( sourceKey ) {
-                    if ( "object" === typeof source[ sourceKey ] )
+                    if ( Array.isArray( source[ sourceKey ] ) )
+                        target[ sourceKey ] = source[ sourceKey ];
+                    else if ( "object" === typeof source[ sourceKey ] )
                         target[ sourceKey ] = ObjectExtensions.RecursiveAssignment( target[ sourceKey ] || {}, source[ sourceKey ] );
-                    else if ( Array.isArray( source ) )
-                        target = source;
                     else
                         target[ sourceKey ] = source[ sourceKey ];
                 } );
@@ -33,11 +33,11 @@ class ObjectExtensions {
         return target;
     }
     static using ( target, source ) {
-        const object = Object.assign( {}, target );
-        if ( typeof source == 'object' ) return ObjectExtensions.RecursiveAssignment( object, source );
-        else if ( typeof source == 'function' ) source.call( object, object );
-        else if ( typeof source == 'undefined' || null === source ) return object;
-        else if ( source instanceof Array && object instanceof Array ) return [ ...object, ...source ];
+		const object = ObjectExtensions.clone( target );
+        if ( Array.isArray( source ) && Array.isArray( target ) ) return [ ...target, ...source ];
+        else if ( typeof source == 'object' ) return ObjectExtensions.RecursiveAssignment( object, source );
+		else if (typeof source == 'function') source.call( object, object );
+        else if ( typeof source == 'undefined' || null === source ) return target;
         return object;
     }
     static strict ( object, source ) {
@@ -55,7 +55,17 @@ class ObjectExtensions {
         Object.keys( source ).forEach( e => object[ e ] = source[ e ] );
     }
     static clone ( object ) {
-        return Object.assign( Object.create( object ), object );
+		if ( !object )
+			return object;
+        if ( Array.isArray( object ) )
+            return [ ...object ].map( e => clone( e ) );
+        if ( typeof object !== "object" )
+            return object;
+		return Object.fromEntries(
+			Object.entries( object ).map(
+                ( [ key, value ] ) => [ key, clone( value ) ]
+            )
+		);
     }
 }
 class OperationExtensions {

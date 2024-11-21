@@ -68,7 +68,7 @@ export class TransitParcel {
         // We made sure, now our job is to either enforce
         // the template or just straight up put the data
         return this[ PROTECTED ][ parcelInfo.id ] = ( this[ PROTECTED2 ]
-            ? strict( Object.create( this[ PROTECTED2 ] ), parcelInfo )
+            ? strict( clone( this[ PROTECTED2 ] ), parcelInfo )
             : parcelInfo );
     }
     remove ( parcelIdOrParcel ) {
