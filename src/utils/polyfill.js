@@ -36,7 +36,7 @@ class ObjectExtensions {
 		const object = ObjectExtensions.clone( target );
         if ( Array.isArray( source ) && Array.isArray( target ) ) return [ ...target, ...source ];
         else if ( typeof source == 'object' ) return ObjectExtensions.RecursiveAssignment( object, source );
-		else if (typeof source == 'function') source.call( object, object );
+		else if ( typeof source == 'function' ) source.call( object, object );
         else if ( typeof source == 'undefined' || null === source ) return target;
         return object;
     }
