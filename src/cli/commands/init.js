@@ -23,8 +23,12 @@ export default {
     info: '',
     description: 'Creates a project file',
     async action () {
-        if ( existsSync( TransitManager.ProjectStore.configPath ) )
+        const doesConfigExists = existsSync( TransitManager.ProjectStore.configPath );
+        if ( this.flags.flags.f && doesConfigExists )
+            this.con.warn( 'Configuration file already exists but Force mode is enabled.' );
+        else if ( doesConfigExists )
             throw new Error( 'Configuration file already exists.' );
+
         const that = this;
         const actionsList = LuskTransit.manager.shared.actions.getAllAsObject();
 
