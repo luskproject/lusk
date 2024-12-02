@@ -70,7 +70,8 @@ const command = flags.keywords.shift();
 [
     await import( './commands/help.js' ),
     await import( './commands/make.js' ),
-    await import( './commands/init.js' )
+    await import( './commands/init.js' ),
+    await import( './commands/run.js'  )
 ].forEach( cmd =>
     commands.push( cmd.default )
 );
