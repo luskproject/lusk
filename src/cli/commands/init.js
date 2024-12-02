@@ -52,9 +52,10 @@ export default {
             async function removeAction () {
                 const removeActionOutput = await that.showSelections( {
                     text: 'Please select an index',
-                    list: actionList.map( ( v, i ) => ( { text: `${ i + 1 }: ${ v.action }`, value: i + 1 } ) )
+                    list: actionList.map( ( v, i ) => ( { text: `${ i + 1 }: ${ v.action }`, value: i } ) )
                 } );
-                actionList = actionList.splice( removeActionOutput, 1 );
+                console.log( removeActionOutput );
+                actionList.splice( removeActionOutput, 1 );
             }
 
             while ( true ) {
