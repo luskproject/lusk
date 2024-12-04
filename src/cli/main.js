@@ -21,7 +21,6 @@ import ConPlus from "../utils/conplus.js";
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { existsSync, readdirSync } from 'node:fs';
-import CallSite from "../utils/callsite.js";
 
 // In this CLI section, we need to parse the flags
 // and the arguments before importing anything
