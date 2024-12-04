@@ -24,6 +24,15 @@ export const COLOR_LEVEL = {
     TRUECOLOR: 3
 }
 
+function hueToRgb ( p, q, t ) {
+    if ( t < 0 ) t += 1;
+    if ( t > 1 ) t -= 1;
+    if ( t < 1/6 ) return p + ( q - p ) * 6 * t;
+    if ( t < 1/2 ) return q;
+    if ( t < 2/3 ) return p + ( q - p ) * ( 2/3 - t ) * 6;
+    return p;
+}
+
 export class Color {
     static fromHEX ( hexString ) {
         const map = hexString.replace( /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
@@ -34,6 +43,19 @@ export class Color {
     }
     static fromRGB ( r, g, b ) {
         return new Color( r, g, b );
+    }
+    static fromHSL ( h, s ,l ) {
+        if ( s === 0 ) {
+            const gr = Math.round( 255 * l );
+            return new Color( gr, gr, gr );
+        }
+        const q = l < 0.5 ? l * ( 1 + s ) : l + s - l * s;
+        const p = 2 * l - q;
+        return new Color(
+            Math.round( 255 * hueToRgb( p, q, h + 1/3 ) ),
+            Math.round( 255 * hueToRgb( p, q, h ) ),
+            Math.round( 255 * hueToRgb( p, q, h - 1/3 ) )
+        );
     }
     constructor ( r, g, b ) {
         this.R = r; this.G = g; this.B = b;
