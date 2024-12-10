@@ -19,7 +19,7 @@ import { colors } from "../utils/ansi.js";
 import _package from "../utils/package.js";
 import ConPlus from "../utils/conplus.js";
 import { createRequire } from 'node:module';
-import { join } from 'node:path';
+import { join, isAbsolute } from 'node:path';
 import { existsSync, readdirSync } from 'node:fs';
 
 // In this CLI section, we need to parse the flags
@@ -42,9 +42,15 @@ const flags = new Flags( [
     { flag:     's',             value: false,   description: 'Force quiet/silent mode' },
 ] );
 
-SharedContext.cwd = flags.arguments.cwd;
-SharedContext.homedir = flags.arguments.homedir;
-SharedContext.solutionPath = flags.arguments[ 'solution-path' ];
+SharedContext.cwd = isAbsolute( flags.arguments.cwd || cwd )
+	? flags.arguments.cwd
+	: join( process.cwd(), flags.arguments.cwd );
+SharedContext.homedir = isAbsolute( flags.arguments.homedir || homedir )
+	? flags.arguments.homedir
+	: join( process.cwd(), flags.arguments.homedir );
+SharedContext.solutionPath = ( !flags.arguments[ 'solution-path' ] || isAbsolute( flags.arguments[ 'solution-path' ] ) )
+	? flags.arguments[ 'solution-path' ]
+	: join( process.cwd(), flags.arguments[ 'solution-path' ] );
 SharedContext.debug = flags.flags.d;
 SharedContext.silent = flags.flags.s;
 
@@ -165,7 +171,7 @@ import { LuskTransit } from "../manager/transitContext.js";
 
 // We need this for setting up some stuff.
 // Check that file for more info.
-import { TransitManager } from "../manager/transitManager.js";
+const { TransitManager } = await import( "../manager/transitManager.js" );
 
 // We can now finally decide on the solutionPath
 SharedContext.solutionPath = SharedContext.solutionPath ||
@@ -223,8 +229,8 @@ async function main () {
         showIntake,
         showSearch,
         flags,
-        cwd,
-        homedir
+        cwd: SharedContext.cwd,
+        homedir: SharedContext.homedir
     }, ...flags.keywords );
 }
 
