@@ -178,21 +178,29 @@ export class TransitUnit {
         } )
     }
     runFile ( fileUrl, globals ) {
-        return ( new LocalModuleContext( fileUrl, {
-            Transit: this.transitFunction,
-            Terminal: ConPlus.instance,
-            Errors: Errors.default,
-            colors,
-            Unit: this
+    	const globs = {
+			Transit: this.transitFunction,
+			Terminal: ConPlus.instance,
+			Errors: Errors.default,
+			colors,
+			Colors: colors,
+			Unit: this
+		};
+        return ( new LocalModuleContext( fileUrl, globs, {
+            'lusk:internal': globs
         } ) ).run();
     }
     runRequire ( id, globals ) {
-        return ( new LocalModuleContext( this.__reqHandle.resolve( id ), {
-            Transit: this.transitFunction,
-            Terminal: ConPlus.instance,
-            Errors: Errors.default,
-            colors,
-            Unit: this
+    	const globs = {
+			Transit: this.transitFunction,
+			Terminal: ConPlus.instance,
+			Errors: Errors.default,
+			colors,
+			Colors: colors,
+			Unit: this
+		};
+        return ( new LocalModuleContext( this.__reqHandle.resolve( id ), globs, {
+        	'lusk:internal': globs
         } ) ).run();
     }
 }

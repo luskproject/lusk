@@ -44,7 +44,7 @@ export class LocalModuleContext {
         // a stable working environment
         const reqHandle = createRequire( this.__scriptUrl );
         const reqFusion = id => {
-            const mod = reqHandle.resolve( id );
+            const mod = id.startsWith( '.' ) ? reqHandle.resolve( id ) : id;
             if ( this.__moduleInnerCache[ mod ] )
                 return this.__moduleInnerCache[ mod ];
             if ( mod === id || !mod )
