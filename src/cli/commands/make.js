@@ -12,9 +12,9 @@
     check https://github.com/luskproject/lusk/
 */
 
-import { parse as yaml_parse } from 'yaml';
 import { TransitManager } from "../../manager/transitManager.js";
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { parse as yaml_parse } from 'yaml';
 import { isAbsolute, join } from 'node:path';
 import LuskDocument from '../../core/luskDocument.js';
 import sharedContext from '../../manager/sharedContext.js';
@@ -28,7 +28,8 @@ export default {
             '', ' ',
             '$', '_',
             '%', '/',
-            '-', '*'
+            '-', '*',
+            '?imports'
         ].includes( preset ) )
             throw new Error( 'You cannot perform "make" on reserved keywords/keys.' );
 
@@ -43,8 +44,9 @@ export default {
         let presetFile = null;
         try {
             presetFile = new LuskDocument( yaml_parse( readFileSync(
-                TransitManager.ProjectStore.configPath, { encoding: 'utf-8' }
-            ) ), Object.fromEntries( args.map( ( arg, idx ) => [ idx, arg ] ) ) );
+                TransitManager.ProjectStore.configPath, { encoding: 'utf-8' } ) ),
+                Object.fromEntries( args.map( ( arg, idx ) => [ idx, arg ] ) ),
+                sharedContext.cwd );
         } catch ( e ) {
             e.message = 'Invalid preset file: ' + e.message;
             throw e;
@@ -80,6 +82,6 @@ export default {
             sharedContext,
             presetFile,
             force
-        }, sharedContext.cwd, sharedContext.homedir, solution, sharedContext.debug );
+        }, sharedContext.homedir, solution, sharedContext.debug );
     }
 }

@@ -18,11 +18,14 @@ import LuskDocumentInfo from "./luskDocumentInfo.js";
 import { LuskDocumentError, PresetNotExistsError } from "../utils/error.js";
 import VariableFormatter from "../utils/strvar.js";
 import { strict } from "../utils/polyfill.js";
+import { parse as yaml_parse } from 'yaml';
+import { isAbsolute, join } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { LuskTransit } from "../manager/transitContext.js";
 
 export default class LuskDocument extends LuskDocumentBase {
-    constructor ( data, globals = {} ) {
+    constructor ( data, globals = {}, workingDirectory = "" ) {
         // Initialize the base with an empty
         // data object.
         super( {} );
@@ -42,23 +45,43 @@ export default class LuskDocument extends LuskDocumentBase {
             delete data.$;
         }
 
+        // Let's see if we have imports section
+        let parentPresets = null;
+        if ( data[ '?imports' ] ) {
+        	// Yes we do have an imports section
+            const importList = Object.entries( data[ '?imports' ] );
+
+            for ( const [ alias, importFile ] of importList ) {
+            	const imported = new LuskDocument( yaml_parse( readFileSync(
+                    join( workingDirectory, importFile ), { encoding: 'utf-8' } ) ), globals,
+                    join( workingDirectory, importFile, '../' ) );
+                parentPresets = Object.fromEntries( Object.entries( imported.presets ).map(
+                        ( [ key, value ] ) => [ `${ alias }.${ key }`, value ] ) );
+            }
+
+            // We have to remove the data in order
+            // for next section to work.
+            delete data[ '?imports' ];
+        }
+
         // Now we can generate presets
         const blacklistedNames = [
             '', ' ',
             '$', '_',
             '%', '/',
-            '-', '*'
+            '-', '*',
+            '?imports'
         ];
 
         // Let's iterate!~
-        this.presets = {};
+        this.presets = parentPresets || {};
         for ( const [ key, preset ] of Object.entries( data ) ) {
             if ( blacklistedNames.includes( key ) )
                 throw new LuskDocumentError( `Given preset name "${ key }" is blacklisted.` );
             this.presets[ key ] = new LuskDocumentPreset( preset, {}, {
                 ...( packageDetails?.getData() || {} ),
                 ...globals
-            }, this.presets );
+            }, this.presets, workingDirectory );
         }
 
         // We can now set the data

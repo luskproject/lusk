@@ -15,17 +15,20 @@
 import LuskDocumentBase from "./luskDocumentBase.js";
 import { LuskDocumentError } from "../utils/error.js";
 import VariableFormatter from "../utils/strvar.js";
-import { strict } from "../utils/polyfill.js";
+import { clone, strict } from "../utils/polyfill.js";
 
 import { LuskTransit } from "../manager/transitContext.js";
 
 export default class LuskDocumentAction extends LuskDocumentBase {
-    constructor ( data, extensions, globals = {} ) {
+    constructor ( data, extensions, globals = {}, workingDirectory = null ) {
         // Since Javascript doesn't allow us to execute
         // anything before super, we can do a type enforcement
         // by just using object destruction assignment to enforce
         // type "object"
         super( { ...( extensions || {} ) } );
+
+        // We need to set the working directory for importability
+        this.workingDirectory = workingDirectory;
 
         // We need to store some information to use
         // inside the luskDocument class
@@ -54,8 +57,8 @@ export default class LuskDocumentAction extends LuskDocumentBase {
         // We are ready to set the data now
         this.setData( strict( tmpData, outputData ) );
     }
-    async run ( ...extras ) {
+    async run ( context, ...extras ) {
         const data = this.getData();
-        return await LuskTransit.manager.shared.actions.get( data.action ).action.call( this, data, ...extras );
+        return await LuskTransit.manager.shared.actions.get( data.action ).action.call( Object.assign( clone( this ), context ), data, this.workingDirectory, ...extras );
     }
 }

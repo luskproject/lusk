@@ -21,7 +21,7 @@ import { clone, strict } from "../utils/polyfill.js";
 import { LuskTransit } from "../manager/transitContext.js";
 
 export default class LuskDocumentPreset extends LuskDocumentBase {
-    constructor ( data, extensions, globals = {}, presetList = {} ) {
+    constructor ( data, extensions, globals = {}, presetList = {}, workingDirectory = null ) {
         // Since Javascript doesn't allow us to execute
         // anything before super, we can do a type enforcement
         // by just using object destruction assignment to enforce
@@ -46,7 +46,7 @@ export default class LuskDocumentPreset extends LuskDocumentBase {
         // If we are in single-action mode, add the
         // action inside the action list and proceed.
         if ( data?.action )
-            actionList.push( new LuskDocumentAction( data, extensions, globals ) );
+            actionList.push( new LuskDocumentAction( data, extensions, globals, workingDirectory ) );
 
         // Let's handle the globals section
         let presetGlobals = globals;
@@ -69,11 +69,12 @@ export default class LuskDocumentPreset extends LuskDocumentBase {
                     actionList.push( new LuskDocumentAction(
                         presetAction.rawData,
                         presetAction.extensions,
-                        { ...presetAction.globals, ...presetGlobals }
+                        { ...presetAction.globals, ...presetGlobals },
+                        presetAction.workingDirectory
                     ) );
                 }
             } else
-                actionList.push( new LuskDocumentAction( action, extensions, globals ) );
+                actionList.push( new LuskDocumentAction( action, extensions, globals, workingDirectory ) );
         } );
 
         // We are ready to set the data now
@@ -83,8 +84,7 @@ export default class LuskDocumentPreset extends LuskDocumentBase {
     async run ( context, ...extras ) {
         const output = [];
         for ( const action of this.actions ) {
-            const data = action.getData();
-            output.push( await LuskTransit.manager.shared.actions.get( data.action ).action.call( Object.assign( clone( action ), context ), data, ...extras ) );
+            output.push( await action.run( context, ...extras ) );
         }
         return output;
     }
