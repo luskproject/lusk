@@ -67,7 +67,7 @@ export class TransitManager {
         // Check if project transit path exists and if
         // so, append to the userList
         if ( existsSync( TransitManager.ProjectStore.transitsDirPath ) ) userList.push(
-            ...readdirSync( TransitManager.UserStore.transitsDirPath, { withFileTypes: true } )
+            ...readdirSync( TransitManager.ProjectStore.transitsDirPath, { withFileTypes: true } )
                 .filter( e => e.isDirectory() )
                 .map( e => resolve( join( e.parentPath, e.name ) ) )
         );

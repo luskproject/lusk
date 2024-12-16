@@ -58,7 +58,7 @@ const con = ConPlus.init( SharedContext.silent );
 
 // Some helpers too
 const createPadding = ( count = 1 ) => ' '.repeat( count );
-const getMinPadding = strArray => strArray.reduce( ( a, b ) => a.length > b.length ? a : b ).length + 4;
+const getMinPadding = strArray => strArray.reduce( ( a, b ) => a.length > b.length ? a : b ).length + 6;
 const capitalize    = str => str.slice( 0, 1 ).toUpperCase() + str.slice( 1 );
 
 // Shortcut the colors we need
@@ -74,6 +74,8 @@ const command = flags.keywords.shift();
 // Import the commands
 [
     await import( './commands/help.js' ),
+    await import( './commands/add.js' ),
+    await import( './commands/rm.js' ),
     await import( './commands/make.js' ),
     await import( './commands/init.js' ),
     await import( './commands/run.js'  )
