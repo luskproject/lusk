@@ -27,7 +27,7 @@ export default {
         // transit or not since Node.js does not allow
         // us to access package metadata anymore.
         try {
-            LuskTransit.__reqHandle( transitName );
+            LuskTransit.__reqHandle( LuskTransit.__reqHandle.resolve( transitName ) );
             // If it made past this area, which is impossible
             // if the module is using Lusk Internal imports;
             // It means that it is not using any transit mechanisms.
