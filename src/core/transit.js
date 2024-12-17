@@ -197,7 +197,8 @@ export class TransitUnit {
 			Errors: Errors.default,
 			colors,
 			Colors: colors,
-			Unit: this
+			Unit: this,
+			...globals
 		};
 		return ( new ModuleUnit.LocalModuleContext( fileUrl, globs, {
 			'lusk:internal': globs,
@@ -211,7 +212,8 @@ export class TransitUnit {
 			Errors: Errors.default,
 			colors,
 			Colors: colors,
-			Unit: this
+			Unit: this,
+			...globals
 		};
 		console.log( ResolverUnit.Resolver.resolve( id ) );
 		return ( new ModuleUnit.LocalModuleContext( ResolverUnit.Resolver.resolve( id ), globs, {
