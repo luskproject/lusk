@@ -30,22 +30,21 @@ export default class ConPlus {
         verbose () { return false },
         newline () { return false }
     };
-    static init ( silent ) {
-        ConPlus.instance = new ConPlus( silent );
+    static init () {
+        ConPlus.instance = new ConPlus();
         return ConPlus.instance;
     }
-    constructor ( silent = false, ident = undefined ) {
-        this.silent = silent
+    constructor ( ident = undefined ) {
         this.base = function ( method, color, ...args ) {
-            if ( !silent || method === 'error' ) {
+            if ( !SCtx.silent || method === 'error' ) {
                 const logRef = ( typeof method === 'function' ? method : console[ method ] );
                 if ( SCtx.debug )
                     logRef( colors.fg[ color ?? 'reset' ]( ( ident ?? Decors.start ) + `(${ CallSite.current( 2 ).text })` ), ...args )
                 else logRef( colors.fg[ color ?? 'reset' ]( ( ident ?? ( typeof method === 'function' ? '  ' : Decors.start ) ) ), ...args )
             }
             return {
-                next: new ConPlus( silent, ( ident ?? '  ' ) + Decors.next ),
-                end:  new ConPlus( silent, ( ident ?? '  ' ) + Decors.end  )
+                next: new ConPlus( ( ident ?? '  ' ) + Decors.next ),
+                end:  new ConPlus( ( ident ?? '  ' ) + Decors.end  )
             };
         }
     }

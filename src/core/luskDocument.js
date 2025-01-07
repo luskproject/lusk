@@ -16,6 +16,7 @@ import LuskDocumentBase from "./luskDocumentBase.js";
 import LuskDocumentPreset from "./luskDocumentPreset.js";
 import LuskDocumentInfo from "./luskDocumentInfo.js";
 import { LuskDocumentError, PresetNotExistsError } from "../utils/error.js";
+import sharedContext from "../manager/sharedContext.js";
 import VariableFormatter from "../utils/strvar.js";
 import { strict } from "../utils/polyfill.js";
 import { parse as yaml_parse } from 'yaml';
@@ -62,6 +63,21 @@ export default class LuskDocument extends LuskDocumentBase {
             // We have to remove the data in order
             // for next section to work.
             delete data[ '?imports' ];
+        }
+
+        // Let's see if we have settings section
+        if ( data[ '?settings' ] ) {
+            // Yes we do have an settings section
+            const {
+                quiet
+            } = data[ '?settings' ];
+
+            if ( typeof quiet !== 'undefined' )
+                sharedContext.silent = quiet;
+
+            // We have to remove the data in order
+            // for next section to work.
+            delete data[ '?settings' ];
         }
 
         // Now we can generate presets

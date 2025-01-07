@@ -29,6 +29,7 @@ export default new class SharedContext {
         this.cwd = process.cwd();
         this.homedir = homedir();
         this.debug = false;
+        this.silent = false;
         this.commands = new class CommandsArray extends Array {
             constructor() { super(); this.__push = this.push; this.commands = {}; this.push = this.push__; }
             push__ ( ...elements ) {

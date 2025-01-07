@@ -54,7 +54,7 @@ SharedContext.solutionPath = ( !flags.arguments[ 'solution-path' ] || isAbsolute
 SharedContext.debug = flags.flags.d;
 SharedContext.silent = flags.flags.s;
 
-const con = ConPlus.init( SharedContext.silent );
+const con = ConPlus.init();
 
 // Some helpers too
 const createPadding = ( count = 1 ) => ' '.repeat( count );
