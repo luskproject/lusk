@@ -1,18 +1,39 @@
-![luskbanner](https://github.com/user-attachments/assets/7e47b88e-4a7f-44ac-b7a4-0b683c7247d4)
-![commitactivity](https://img.shields.io/github/commit-activity/w/luskproject/lusk?style=flat-square&label=Commit%20Activity&labelColor=%23141414&color=%23C0C0C0&cacheSeconds=10) ![issues](https://img.shields.io/github/issues/luskproject/lusk?style=flat-square&label=Open%20Issues&labelColor=%23141414&color=%23C0C0C0&cacheSeconds=10) ![license](https://img.shields.io/github/license/luskproject/lusk?style=flat-square&label=License&labelColor=%23141414&color=%23C0C0C0&cacheSeconds=10) <br>
-Lusk is a modular, plugin-based project manager. It has a built-in plugin manager to add, remove or configure plugins. You can automate your operations easily and in a human-readable format, YAML!
-<details>
-<summary>What exactly is Lusk?</summary>
-<blockquote>Lusk is... again, a plugin-based project manager. It is almost a wrapper for our custom plugin manager, so called Transits! Transits allow you to manipulate a shared context, you can do basic CRUD operations inside this context and use the data inside the context for your own applications. We've implemented our own plugin system to only allow actions, sub-actions and action extensions. With all of these combined, you get a basic document-based project manager.</blockquote>
-</details>
-<details>
-<summary>What can i use Lusk for?</summary>
-<blockquote>To manage your projects and automate certain build procedures. For example, let's say that you have several Javascript modules and you need to bundle them; you can write a Lusk document to tell Lusk that when a certain preset is called, certain actions must happen. After you write the preset details, you can run <br><br><pre><code>lusk make [preset_name]</code></pre> to run that preset to get whatever you've expected.</blockquote>
-</details>
-<details>
-<summary>How can i get more details about Lusk?</summary>
-<blockquote>You can check the wiki page: <a href="https://github.com/luskproject/lusk/wiki">https://github.com/luskproject/lusk/wiki</a></blockquote>
-</details>
+<p align="center"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/8b750a5e-2c4d-42ae-a67c-3a0cb48b6889">
+  <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/2247cca5-3270-4966-9a8d-25f33ef5fca8">
+  <img src="https://github.com/user-attachments/assets/2247cca5-3270-4966-9a8d-25f33ef5fca8" />
+</picture></p>
 
-> [!IMPORTANT]
-> Lusk is still in development progress, It might take a while for us to finish it since we have a lot in mind to do. You can star and watch this repo to get details as soon as possible.
+<p align="center">
+  <img src="https://img.shields.io/github/commit-activity/w/luskproject/lusk?style=flat-square&label=Commit%20Activity&labelColor=%23202020&color=%23C0C0C0&cacheSeconds=10" />
+  <img src="https://img.shields.io/github/issues/luskproject/lusk?style=flat-square&label=Open%20Issues&labelColor=%23202020&color=%23C0C0C0&cacheSeconds=10" />
+  <img src="https://img.shields.io/github/license/luskproject/lusk?style=flat-square&label=License&labelColor=%23202020&color=%23C0C0C0&cacheSeconds=10" />
+</p>
+Lusk is a modular, plugin-based project manager. It is simple, based on a human-readable document format called YAML. It has a built-in plugin manager to add, remove or configure plugins. You can use Lusk to automate your build procedures, create templates and more. It is based on <a href="https://github.com/apidevel/transit-proposal/blob/main/PROPOSAL-VERSION_1.md">Transit Plugin Architecture Version 1</a>, absolutely extended beyond it's definitions.
+
+### Installation
+You need Node.JS v20 or later. You can run the command below to install Lusk:
+```
+npm install -g lusk
+```
+
+### Usage
+To see the built-in help page, please run the command below:
+```
+lusk help
+```
+After checking in the help page, go to the project that you want to use lusk and test it. Here's an example preset document (`lusk.yaml`) for you to test:
+```yaml
+default:
+    action: os.shell
+    cmdlines:
+        - echo Hello World
+```
+After writing this to a file, Execute the preset by running this in the command line:
+```
+lusk make
+```
+and you should see a `Hello World` message.
+
+### Beyond the boundaries
+To see more details, please visit https://github.com/luskproject/lusk/wiki
